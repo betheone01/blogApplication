@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.blog.app.dto.PostDto;
@@ -97,9 +98,19 @@ public class PostServiceImpl  implements PostService{
 	}
 
 	@Override
-	public PostResponse getAllPosts(Integer pageNumber, Integer pageSize) {
+	public PostResponse getAllPosts(Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 	    // Create a Pageable object
-	    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+		Sort sort =null;
+		if(sortDir.equals("asc"))
+		{
+			sort=Sort.by(sortBy).ascending();
+		}
+		else
+		{
+			sort=Sort.by(sortBy).descending();
+			
+		}
+	    Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 	    
 	    // Fetch a page of posts using pagination
 	    Page<Post> pagePost = this.postRepo.findAll(pageable);
